@@ -6,13 +6,9 @@
 #include <WiFiManager.h>
 #include "RFMQTT.h"
 
-#define VERSION "1.0"
+#include "user_settings.h"
 
-const char * mqtt_hostname = "192.168.0.200";
-const char * mqtt_username = "mqtt";
-const char * mqtt_password = "mqtt";
-const char * ssid = "Maison";
-const char * password = "chicharro";
+#define VERSION "1.0"
 
 WiFiManager wifiManager;
 WiFiManagerParameter custom_mqtt_hostname("hostname", "mqtt hostname", mqtt_hostname, 40);
