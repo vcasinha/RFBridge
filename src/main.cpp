@@ -9,15 +9,17 @@
 #include "user_settings.h"
 
 #define VERSION "1.0"
-
+WiFiClient wifiClient;
+WiFiServer server(80);
 WiFiManager wifiManager;
 WiFiManagerParameter custom_mqtt_hostname("hostname", "mqtt hostname", mqtt_hostname, 40);
 WiFiManagerParameter custom_mqtt_username("username", "mqtt username", mqtt_username, 20);
 WiFiManagerParameter custom_mqtt_password("password", "mqtt password", mqtt_password, 20);
-RFMQTT RFbridge;
-WiFiClient wifiClient;
 PubSubClient client(wifiClient);
-WiFiServer server(80);
+RFMQTT RFbridge;
+
+
+String hostname = String("ESP8266-");
 
 void callback(char * topic, unsigned char * payload, unsigned int length) 
 {
@@ -44,15 +46,8 @@ void connect()
     {
         // Loop until we're reconnected to the MQTT server
         while (client.connected() == false) 
-        {
-            // Generate client name based on MAC address and last 8 bits of microsecond counter
-            String clientName;
-            clientName += "esp8266-";
-            uint8_t mac[6];
-            WiFi.macAddress(mac);
-            clientName += format_mac(mac);
-
-            if (client.connect((char*) clientName.c_str(), custom_mqtt_username.getValue(), custom_mqtt_password.getValue()))
+        {            
+            if (client.connect((char*) hostname.c_str(), custom_mqtt_username.getValue(), custom_mqtt_password.getValue()))
             {
                 Serial.printf("Connected to MQTT at %s\n", mqtt_hostname);
             }
@@ -65,34 +60,47 @@ void connect()
     }
 }
 
+void update_hostname(void)
+{
+    uint8_t mac[6];
+    WiFi.macAddress(mac);
+    hostname += format_mac(mac);
+}
+
 void setup() 
 {
+    ///
+    update_hostname();
+    
     // put your setup code here, to run once:
-    Serial.begin(9600);
-    //start wifi subsystem
-    Serial.printf("\n\nRF bridge to MQTT %s\n", VERSION); 
+    Serial.begin(serial_monitor_baud);
     delay(100);
-
+    //start wifi subsystem
+    Serial.printf("\n\nRF bridge to MQTT unit %s version %s\n\n", hostname.c_str(), VERSION);
+    Serial.println("Initialize WiFi...");
     WiFi.setAutoReconnect(true);
+
+    //WiFi Manager setup
     wifiManager.addParameter(&custom_mqtt_hostname);
     wifiManager.addParameter(&custom_mqtt_username);
     wifiManager.addParameter(&custom_mqtt_password);
-    wifiManager.autoConnect();
-    delay(100);
 
-    client.setServer(custom_mqtt_hostname.getValue(), 1883);
-    client.setCallback(callback);
+    wifiManager.setConfigPortalTimeout(180);
+    wifiManager.autoConnect();
     //Serial.setDebugOutput(true);
     //WiFi.begin(ssid, password);
-    delay(100);
-
     //WiFi.printDiag(Serial);
-
+    delay(100);
+    Serial.println("Initialize MQTT Client...");
+    client.setServer(custom_mqtt_hostname.getValue(), 1883);
+    client.setCallback(callback);
     connect();
 
-    delay(1000);
-    RFbridge.setup(client, D6, D5, 15);
-    Serial.println("Initialization complete.");
+    delay(100);
+
+    Serial.println("Initialize RF Bridge...");
+    RFbridge.setup(client, emitter_pin, receiver_pin, 15);
+    Serial.println("Unit ready");
 }
 
 void loop() 

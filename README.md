@@ -3,7 +3,7 @@ RF bridge to MQTT
 
 The bidirectional bridge between the two protocols. Repeats on one medium any code received on the other medium.
 
-Under development. Contributions are welcome.
+In working state. Contributions are welcome.
 
 ## Concept
 To provide interaction between RF and MQTT as transparently as possible.
