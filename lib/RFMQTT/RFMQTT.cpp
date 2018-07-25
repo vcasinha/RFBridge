@@ -1,6 +1,8 @@
 #include <Arduino.h>
 #include "RFMQTT.h"
 
+#define RF_THROTTLE_PER_SECOND 1
+
 static const char* bin2tristate(const char* bin);
 static char * dec2binWzerofill(unsigned long Dec, unsigned int bitLength);
 
@@ -64,7 +66,8 @@ void RFMQTT::loop()
 
         unsigned long time_now = millis();
         unsigned long time_delta = time_now - timeSinceMQTT;
-        if(strcmp(tristate_code, _emittedMQTTCode) == 0 && time_delta < 1000)
+
+        if(strcmp(tristate_code, _emittedMQTTCode) == 0 && time_delta < (1000/RF_THROTTLE_PER_SECOND))
         {
             Serial.printf(" Ignoring, probably a repetition. (%ld)\n", time_delta);
             return;
@@ -72,7 +75,6 @@ void RFMQTT::loop()
 
         Serial.printf("    TD(%ld) Compare (%s vs %s)\n", time_delta, _emittedMQTTCode, tristate_code);
 
-        
         sprintf(topic, "home/switch/rf/%s", tristate_code);
         this->_client.publish(topic, "TOGGLE");
 

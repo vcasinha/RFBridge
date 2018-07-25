@@ -21,6 +21,9 @@ Works on:
 Clone this repository and adjust settings in platformio.ini
 
 ```c++
+    unsigned int serial_monitor_baud = 9600;
+    unsigned int emitter_pin = D6;
+    unsigned int receiver_pin = D5;
     const char * mqtt_hostname = "192.168.0.200";
     const char * mqtt_username = "mqtt";
     const char * mqtt_password = "mqtt";

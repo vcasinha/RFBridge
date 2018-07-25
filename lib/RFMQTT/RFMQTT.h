@@ -19,10 +19,12 @@ class RFMQTT
         unsigned int _emitterPin;
         unsigned int _receiverPin;
         unsigned int _emitterRepeat = 15;
-        bool _ready = false;
-
+        
         void setFormat(unsigned int format);
         void setup(PubSubClient client, int emitter_pin, int receiver_pin, int emitter_repeat);
         void callbackMQTT(char * topic, unsigned char * payload, unsigned int length);
         void loop();
+
+    private:
+        bool _ready = false;
 };

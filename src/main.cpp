@@ -18,7 +18,6 @@ WiFiManagerParameter custom_mqtt_password("password", "mqtt password", mqtt_pass
 PubSubClient client(wifiClient);
 RFMQTT RFbridge;
 
-
 String hostname = String("ESP8266-");
 
 void callback(char * topic, unsigned char * payload, unsigned int length) 
@@ -113,5 +112,5 @@ void loop()
     client.loop();
 
     RFbridge.loop();
-    delay(100);
+    delay(CYCLE_DELAY);
 }
