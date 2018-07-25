@@ -4,6 +4,11 @@
 static const char* bin2tristate(const char* bin);
 static char * dec2binWzerofill(unsigned long Dec, unsigned int bitLength);
 
+void RFMQTT::setFormat(unsigned int format)
+{
+    _format = format;
+}
+
 void RFMQTT::setup(PubSubClient client, int emitter_pin, int receiver_pin, int emitter_repeat)
 {
     this->_emitterPin = emitter_pin;
