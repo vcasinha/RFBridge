@@ -1,4 +1,4 @@
-# RFBridge
+# RF Bridge
 RF bridge to MQTT
 
 The bidirectional bridge between the two protocols. Repeats on one medium any code received on the other medium.
