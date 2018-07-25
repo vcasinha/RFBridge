@@ -1,6 +1,0 @@
-{
-    "terminal.integrated.env.osx": {
-        "PATH": "/Users/vcasinha/.platformio/penv/bin:/Users/vcasinha/.platformio/penv:/usr/local/bin:/usr/local/sbin:/Users/vcasinha/.npm-packages/bin:/Users/vcasinha/.composer/vendor/bin:/usr/bin:/usr/sbin:/bin:/sbin:/Library/Frameworks/Mono.framework/Versions/Current/bin",
-        "PLATFORMIO_CALLER": "vscode"
-    }
-}
